@@ -17,6 +17,8 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 POSTGRES_DATABASE = os.environ.get("POSTGRES_DATABASE")
 
+engine = create_engine(f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:5432/{POSTGRES_DATABASE}')
+
 # Create DB connection
 def create_db_connection():
     try:
@@ -32,8 +34,6 @@ def create_db_connection():
         return connection, cursor
     except (Exception, psycopg2.Error) as error:
         raise HTTPException(status_code=500, detail=f"Error while connecting to PostgreSQL: {error}")
-
-engine = create_engine(f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:5432/{POSTGRES_DATABASE}')
 
 def execute_query(query):
     connection, cursor = create_db_connection()
