@@ -1,4 +1,6 @@
 # Ignore the config file
-config.py 
+config.py
 
 __pycache__/
+venv/
+backend/.env
