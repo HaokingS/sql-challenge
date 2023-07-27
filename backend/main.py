@@ -1,17 +1,15 @@
 from fastapi import FastAPI, HTTPException
 import psycopg2
 import os
-
 import pandas as pd
-from sqlalchemy import create_engine,text
-
+from sqlalchemy import create_engine
 from dotenv import load_dotenv
-load_dotenv()
+from query import *
 
 app = FastAPI(debug=True)
-
 engine = create_engine(f'postgresql://{"POSTGRES_USER"}:{"POSTGRES_PASSWORD"}@{"POSTGRES_HOST"}:5432/{"POSTGRES_DATABASE"}')
 
+load_dotenv()
 try:
     connection = psycopg2.connect(
         user=os.environ.get("POSTGRES_USER"),
@@ -29,18 +27,6 @@ except (Exception, psycopg2.Error) as error:
 conn_string = f'postgresql://{os.environ.get("POSTGRES_USER")}:{os.environ.get("POSTGRES_PASSWORD")}@{os.environ.get("POSTGRES_HOST")}:{os.environ.get("POSTGRES_PORT")}/{os.environ.get("POSTGRES_DATABASE")}'
 print("Connection string:", conn_string)
 
-
-first_query = """
-SELECT
-    employees.emp_no,
-    employees.last_name,
-    employees.first_name,
-    employees.sex,
-    salaries.salary
-FROM employees
-JOIN salaries ON employees.emp_no = salaries.emp_no
-LIMIT 5;"""
-
 @app.get("/")
 def root():
     return {"Hello": "World"}
@@ -49,6 +35,97 @@ def root():
 def first():
     try:
         cursor.execute(first_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v2')
+def first():
+    try:
+        cursor.execute(second_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v3')
+def first():
+    try:
+        cursor.execute(third_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v4')
+def first():
+    try:
+        cursor.execute(fourth_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v5')
+def first():
+    try:
+        cursor.execute(fifth_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v6')
+def first():
+    try:
+        cursor.execute(sixth_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v7')
+def first():
+    try:
+        cursor.execute(seventh_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
+    return response
+
+@app.get('/v8')
+def first():
+    try:
+        cursor.execute(eight_query)
         result = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         result_df = pd.DataFrame(result, columns=columns)
