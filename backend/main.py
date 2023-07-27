@@ -1,10 +1,16 @@
 from fastapi import FastAPI, HTTPException
 import psycopg2
 import os
+
+import pandas as pd
+from sqlalchemy import create_engine,text
+
 from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
+
+engine = create_engine(f'postgresql://{"POSTGRES_USER"}:{"POSTGRES_PASSWORD"}@localhost:5432/sql_challenge')
 
 try:
     connection = psycopg2.connect(
@@ -19,10 +25,26 @@ try:
 except (Exception, psycopg2.Error) as error:
     raise HTTPException(status_code=500, detail=f"Error while connecting to PostgreSQL: {error}")
 
+first_query = """
+SELECT
+    employees.emp_no,
+    employees.last_name,
+    employees.first_name,
+    employees.sex,
+    salaries.salary
+FROM employees
+JOIN salaries ON employees.emp_no = salaries.emp_no
+LIMIT 5;"""
 
 @app.get("/")
 def root():
-    return {"Hello": "kack"}
+    return {"Hello": "World"}
+
+@app.get('/v1')
+def first():
+    result = pd.DataFrame(engine.connect().execute(text(first_query)))
+    response = result.to_dict(orient='records')
+    return response
 
 # @app.get('/api/v1/users')
 # async def fetch_users():
