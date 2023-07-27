@@ -8,9 +8,9 @@ from sqlalchemy import create_engine,text
 from dotenv import load_dotenv
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
-engine = create_engine(f'postgresql://{"POSTGRES_USER"}:{"POSTGRES_PASSWORD"}@localhost:5432/sql_challenge')
+engine = create_engine(f'postgresql://{"POSTGRES_USER"}:{"POSTGRES_PASSWORD"}@{"POSTGRES_HOST"}:5432/{"POSTGRES_DATABASE"}')
 
 try:
     connection = psycopg2.connect(
@@ -24,6 +24,11 @@ try:
     print("Connected to PostgreSQL")
 except (Exception, psycopg2.Error) as error:
     raise HTTPException(status_code=500, detail=f"Error while connecting to PostgreSQL: {error}")
+
+# Check the SQLAlchemy connection string
+conn_string = f'postgresql://{os.environ.get("POSTGRES_USER")}:{os.environ.get("POSTGRES_PASSWORD")}@{os.environ.get("POSTGRES_HOST")}:{os.environ.get("POSTGRES_PORT")}/{os.environ.get("POSTGRES_DATABASE")}'
+print("Connection string:", conn_string)
+
 
 first_query = """
 SELECT
@@ -42,44 +47,13 @@ def root():
 
 @app.get('/v1')
 def first():
-    result = pd.DataFrame(engine.connect().execute(text(first_query)))
-    response = result.to_dict(orient='records')
+    try:
+        cursor.execute(first_query)
+        result = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        result_df = pd.DataFrame(result, columns=columns)
+        response = result_df.to_dict(orient='records')
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error executing query: {error}")
+        return {"error": "Error executing query"}
     return response
-
-# @app.get('/api/v1/users')
-# async def fetch_users():
-#     return db
-
-# @app.post('/api/v1/users')
-# async def register_user(user: User):
-#     db.append(user)
-#     return {"id" : user.id}
-
-# @app.delete('/api/v1/users')
-# async def delete_user(user_id: UUID):
-#     for user in db:
-#         if user.id == user_id:
-#             db.remove(user)
-#             return
-#     raise HTTPException(
-#         status_code = 404,
-#         detail = f"user with id: {user_id} does not exist"
-#     )
-    
-# @app.put('/api/v1/users')
-# async def update_user(user_update = UserUpdateRequest, user_id = UUID):
-#     for user in db:
-#         if user.id == user_id:
-#             if user_update.first_name is not None:
-#                 user.first_name == user_update.first_name
-#             if user_update.last_name is not None:
-#                 user.last_name == user_update.last_name
-#             if user_update.middle_name is not None:
-#                 user.middle_name == user_update.middle_name
-#             if user_update.roles is not None:
-#                 user.roles == user_update.roles
-#             return
-#     raise HTTPException(
-#         status_code = 404,
-#         detail = f"user with id: {user_id} does not exist"
-#     )
