@@ -57,7 +57,7 @@ LIMIT 10
 ;"""
 
 # 6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
-six_query = """SELECT
+sixth_query = """SELECT
     employees.emp_no,
     employees.last_name,
     employees.first_name,
