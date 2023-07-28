@@ -9,7 +9,7 @@ from query import *
 
 app = FastAPI()
 load_dotenv()
-
+a
 # variable environtment
 POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
