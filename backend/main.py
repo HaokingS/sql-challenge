@@ -54,10 +54,10 @@ def create_db_connection():
     except (Exception, psycopg2.Error) as error:
         raise HTTPException(status_code=500, detail=f"Error while connecting to PostgreSQL: {error}")
 
-def execute_query(query: str, offset: int = 0, limit: int = 10):
+def execute_query(query: str, offset: int = 0, limit: int = 50):
     connection, cursor = create_db_connection()
     try:
-        cursor.execute(query, {"offset": offset, "limit": limit})
+        cursor.execute(query + f" OFFSET {offset} LIMIT {limit};")
         result = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         result_df = pd.DataFrame(result, columns=columns)
@@ -89,7 +89,7 @@ def endpoint_q4(offset: int = Query(0), limit: int = Query(10)):
 
 @app.get('/q5')
 def endpoint_q5(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(fourth_query, offset=offset, limit=limit)
+    return execute_query(fifth_query, offset=offset, limit=limit)
 
 @app.get('/q6')
 def endpoint_q6(offset: int = Query(0), limit: int = Query(10)):
@@ -102,6 +102,21 @@ def endpoint_q7(offset: int = Query(0), limit: int = Query(10)):
 @app.get('/q8')
 def endpoint_q8(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(eight_query, offset=offset, limit=limit)
+
+def get_total_rows_count(selected_query):
+    connection, cursor = create_db_connection()
+    try:
+        cursor.execute(f"SELECT COUNT(*) FROM {selected_query};")
+        count = cursor.fetchone()[0]
+        return count
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error fetching total count: {error}")
+        return 0
+
+@app.get('/{selected_query}/count')
+def endpoint_count(selected_query: str):
+    count = get_total_rows_count(selected_query)
+    return {"count": count}
 
 @app.get('/api/table')
 def get_data(
