@@ -1,4 +1,5 @@
 # Import necessary libraries
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, Query
 from typing import Optional
 import psycopg2
@@ -9,8 +10,25 @@ from dotenv import load_dotenv
 from query import *
 
 app = FastAPI()
-load_dotenv()
 
+# Create a list of allowed origins (your frontend's domain).
+# You can set this to your frontend URL, such as "http://localhost:3000".
+# You can also use a wildcard "*" to allow any origin (not recommended for production).
+allowed_origins = [
+    "http://localhost:3000",  # Replace this with your frontend's domain.
+    # Add more origins if needed.
+]
+
+# Configure the CORS middleware.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+
+load_dotenv()
 # variable environtment
 POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
@@ -36,10 +54,10 @@ def create_db_connection():
     except (Exception, psycopg2.Error) as error:
         raise HTTPException(status_code=500, detail=f"Error while connecting to PostgreSQL: {error}")
 
-def execute_query(query: str, params:dict):
+def execute_query(query: str, offset: int = 0, limit: int = 10):
     connection, cursor = create_db_connection()
     try:
-        cursor.execute(query)
+        cursor.execute(query, {"offset": offset, "limit": limit})
         result = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         result_df = pd.DataFrame(result, columns=columns)
@@ -54,36 +72,36 @@ def root():
     return {"Hello": "World"}
 
 @app.get('/q1')
-def endpoint_q1():
-    return execute_query(first_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(first_query, offset=offset, limit=limit)
 
 @app.get('/q2')
-def endpoint_q2():
-    return execute_query(second_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(second_query, offset=offset, limit=limit)
 
 @app.get('/q3')
-def endpoint_q3():
-    return execute_query(third_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(third_query, offset=offset, limit=limit)
 
 @app.get('/q4')
-def endpoint_q4():
-    return execute_query(fourth_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(fourth_query, offset=offset, limit=limit)
 
 @app.get('/q5')
-def endpoint_q5():
-    return execute_query(fifth_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(fifth_query, offset=offset, limit=limit)
 
 @app.get('/q6')
-def endpoint_q6():
-    return execute_query(sixth_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(sixth_query, offset=offset, limit=limit)
 
 @app.get('/q7')
-def endpoint_q7():
-    return execute_query(seventh_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(seventh_query, offset=offset, limit=limit)
 
 @app.get('/q8')
-def endpoint_q8():
-    return execute_query(eight_query, {})
+def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+    return execute_query(eight_query, offset=offset, limit=limit)
 
 @app.get('/api/table')
 def get_data(
@@ -112,7 +130,7 @@ def get_data(
     if limit:
         query += f" LIMIT {limit}"
 
-    return execute_query(query, {})
+    return execute_query(query)
 
 @app.get('/api/custom')
 def get_data(
@@ -154,4 +172,4 @@ def get_data(
     if limit:
         query += f" LIMIT {limit}"
 
-    return execute_query(query, {})
+    return execute_query(query)

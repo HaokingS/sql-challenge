@@ -1,0 +1,37 @@
+/* styles.css */
+
+/* Table styles */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px auto;
+    /* Center the table horizontally */
+    max-width: 800px;
+    border: 2px solid #000;
+    /* Add a border to the table */
+}
+
+th,
+td {
+    border: 1px solid #000;
+    /* Add borders to table cells */
+    padding: 8px;
+}
+
+/* Dropdown menu and input button styles */
+.query-container {
+    text-align: center;
+    /* Center the container */
+    margin-top: 20px;
+}
+
+.query-container select {
+    padding: 8px;
+    font-size: 16px;
+}
+
+.query-container button {
+    padding: 8px 20px;
+    font-size: 16px;
+    margin-left: 10px;
+}
