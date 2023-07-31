@@ -76,31 +76,31 @@ def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(first_query, offset=offset, limit=limit)
 
 @app.get('/q2')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q2(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(second_query, offset=offset, limit=limit)
 
 @app.get('/q3')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q3(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(third_query, offset=offset, limit=limit)
 
 @app.get('/q4')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q4(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(fourth_query, offset=offset, limit=limit)
 
 @app.get('/q5')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q5(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(fifth_query, offset=offset, limit=limit)
 
 @app.get('/q6')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q6(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(sixth_query, offset=offset, limit=limit)
 
 @app.get('/q7')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q7(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(seventh_query, offset=offset, limit=limit)
 
 @app.get('/q8')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
+def endpoint_q8(offset: int = Query(0), limit: int = Query(10)):
     return execute_query(eight_query, offset=offset, limit=limit)
 
 @app.get('/api/table')
