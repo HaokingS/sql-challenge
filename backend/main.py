@@ -67,9 +67,9 @@ def execute_query(query: str, offset: int = 0, limit: int = 10):
         print(f"Error executing query: {error}")
         return {"error": "Error executing query"}
 
-@app.get("/")
-def root():
-    return {"Hello": "World"}
+# @app.get("/")
+# def root():
+#     return {"Hello": "World"}
 
 @app.get('/q1')
 def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
@@ -89,7 +89,7 @@ def endpoint_q4(offset: int = Query(0), limit: int = Query(10)):
 
 @app.get('/q5')
 def endpoint_q5(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(fifth_query, offset=offset, limit=limit)
+    return execute_query(fourth_query, offset=offset, limit=limit)
 
 @app.get('/q6')
 def endpoint_q6(offset: int = Query(0), limit: int = Query(10)):
