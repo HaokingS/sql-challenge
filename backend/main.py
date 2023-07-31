@@ -1,5 +1,6 @@
 # Import necessary libraries
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from typing import Optional
 import psycopg2
 import os
 import pandas as pd
@@ -9,7 +10,7 @@ from query import *
 
 app = FastAPI()
 load_dotenv()
-a
+
 # variable environtment
 POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
@@ -35,7 +36,7 @@ def create_db_connection():
     except (Exception, psycopg2.Error) as error:
         raise HTTPException(status_code=500, detail=f"Error while connecting to PostgreSQL: {error}")
 
-def execute_query(query):
+def execute_query(query: str, params:dict):
     connection, cursor = create_db_connection()
     try:
         cursor.execute(query)
@@ -52,34 +53,105 @@ def execute_query(query):
 def root():
     return {"Hello": "World"}
 
-@app.get('/v1')
-def endpoint_v1():
-    return execute_query(first_query)
+@app.get('/q1')
+def endpoint_q1():
+    return execute_query(first_query, {})
 
-@app.get('/v2')
-def endpoint_v2():
-    return execute_query(second_query)
+@app.get('/q2')
+def endpoint_q2():
+    return execute_query(second_query, {})
 
-@app.get('/v3')
-def endpoint_v3():
-    return execute_query(third_query)
+@app.get('/q3')
+def endpoint_q3():
+    return execute_query(third_query, {})
 
-@app.get('/v4')
-def endpoint_v3():
-    return execute_query(fourth_query)
+@app.get('/q4')
+def endpoint_q4():
+    return execute_query(fourth_query, {})
 
-@app.get('/v5')
-def endpoint_v3():
-    return execute_query(fifth_query)
+@app.get('/q5')
+def endpoint_q5():
+    return execute_query(fifth_query, {})
 
-@app.get('/v6')
-def endpoint_v3():
-    return execute_query(sixth_query)
+@app.get('/q6')
+def endpoint_q6():
+    return execute_query(sixth_query, {})
 
-@app.get('/v7')
-def endpoint_v3():
-    return execute_query(seventh_query)
+@app.get('/q7')
+def endpoint_q7():
+    return execute_query(seventh_query, {})
 
-@app.get('/v8')
-def endpoint_v3():
-    return execute_query(eight_query)
+@app.get('/q8')
+def endpoint_q8():
+    return execute_query(eight_query, {})
+
+@app.get('/api/table')
+def get_data(
+    table: str = Query(..., title="Table name", description="Name of the table (customers or orders)"),
+    column: Optional[str] = Query(None, title="Column name", description="Name of the Column"),
+    column_filter: Optional[str] = Query(None, title="Filter name", description="Name of the Filter"),
+    filter_value: Optional[str] = Query(None, title="Filter value", description="Value of the Filter"),
+    order_by: Optional[str] = Query(None, title="Order by", description="Column to order the results"),
+    limit: Optional[int] = Query(None, title="Limit", description="Limit the number of rows in the result"),
+):
+    query = f"SELECT "
+
+    if column:
+        query += f"{column}"
+    else:
+        query += "*"
+
+    query += f" FROM {table}"
+
+    if column_filter and filter_value:
+        query += f" WHERE {column_filter} = '{filter_value}'"
+
+    if order_by:
+        query += f" ORDER BY {order_by}"
+
+    if limit:
+        query += f" LIMIT {limit}"
+
+    return execute_query(query, {})
+
+@app.get('/api/custom')
+def get_data(
+    column: Optional[str] = Query(None, title="Column name", description="Name of the Column"),
+    column_filter: Optional[str] = Query(None, title="Filter name", description="Name of the Filter"),
+    filter_value: Optional[str] = Query(None, title="Filter value", description="Value of the Filter"),
+    order_by: Optional[str] = Query(None, title="Order by", description="Column to order the results"),
+    limit: Optional[int] = Query(None, title="Limit", description="Limit the number of rows in the result"),
+):
+    table1 = "departments"
+    table2 = "dept_emp"
+    table3 = "dept_manager"
+    table4 = "employees"
+    table5 = "salaries"
+    table6 = "titles"
+
+    query = f"SELECT "
+
+    if column:
+        query += f"{column}"
+    else:
+        query += "*"
+
+    query += f" FROM {table4}"
+
+    # Adding joins based on the assumption that there are foreign key relationships between tables.
+    query += f" JOIN {table6} ON {table4}.emp_title_id = {table6}.title_id"
+    query += f" JOIN {table2} ON {table4}.emp_no = {table2}.emp_no"
+    query += f" JOIN {table3} AS dm ON {table4}.emp_no = dm.emp_no"
+    query += f" JOIN {table5} ON {table4}.emp_no = {table5}.emp_no"
+    query += f" JOIN {table1} ON dm.dept_no = {table1}.dept_no"  # Use the alias dm for the second instance of table3.
+
+    if column_filter and filter_value:
+        query += f" WHERE {table4}.{column_filter} = '{filter_value}'"
+
+    if order_by:
+        query += f" ORDER BY {table1}.{order_by}"
+
+    if limit:
+        query += f" LIMIT {limit}"
+
+    return execute_query(query, {})
