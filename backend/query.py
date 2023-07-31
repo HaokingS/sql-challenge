@@ -1,7 +1,7 @@
 # 1. List the following details of each employee: employee number, last name, first name, sex, and salary
 first_query = """
 SELECT
-    employees.emp_no,
+    employees.emp_no as employee number,
     employees.last_name,
     employees.first_name,
     employees.sex,
