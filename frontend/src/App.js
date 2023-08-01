@@ -5,15 +5,15 @@ import "./App.css"; // Import the CSS file
 function App() {
   const [data, setData] = useState([]);
   const [selectedQuery, setSelectedQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(5);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
-  const fetchData = () => {
+  const fetchData = async () => {
     // Make sure a query option is selected before making the request
     if (!selectedQuery) {
       console.error("Please select a query from the dropdown.");
@@ -57,7 +57,7 @@ function App() {
     setSelectedQuery(event.target.value);
   };
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = Math.ceil(data.totalCount / itemsPerPage);
 
   // Function to handle page change
   const handlePageChange = (page) => {
