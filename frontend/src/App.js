@@ -63,7 +63,12 @@ function App() {
 
   // Function to handle page change
   const handlePageChange = (page) => {
+    setIsLoading(true);
     setCurrentPage(page);
+  };
+
+  const calculateRowNumber = (rowIndex) => {
+    return (currentPage - 1) * itemsPerPage + rowIndex + 1;
   };
 
   return (
@@ -86,11 +91,14 @@ function App() {
         <button onClick={handleRunQuery}>Run Query</button>
       </div>
       {isLoading ? (
-        <div className="loading">Loading...</div>
+        <div className="loading-container">
+          <div className="loading"></div>
+        </div>
       ) : (
         <table className="table">
           <thead>
             <tr>
+              <th>No</th> {/* Change the header for the row number column to "No" */}
               {data.length > 0 &&
                 Object.keys(data[0]).map((column, index) => (
                   <th key={index}>{column}</th>
@@ -100,6 +108,7 @@ function App() {
           <tbody>
             {data.map((row, rowIndex) => (
               <tr key={rowIndex}>
+                <td>{calculateRowNumber(rowIndex)}</td> {/* Display the row number */}
                 {Object.values(row).map((value, colIndex) => (
                   <td key={colIndex}>{value}</td>
                 ))}
