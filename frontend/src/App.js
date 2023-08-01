@@ -10,6 +10,7 @@ function App() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0); // Add state for total count
   const [isLoading, setIsLoading] = useState(false);
+  const [isTableVisible, setIsTableVisible] = useState(false); // Add a state to control table visibility
 
   useEffect(() => {
     fetchData();
@@ -54,6 +55,7 @@ function App() {
     // Fetch data from the server
     setIsLoading(true); // Set isLoading to true before fetching data
     fetchData();
+    setIsTableVisible(true);
   };
 
   const handleSelectChange = (event) => {
@@ -92,30 +94,45 @@ function App() {
       </div>
       {isLoading ? (
         <div className="loading-container">
-          <div className="loading"></div>
+          {/* Add the loading spinner */}
+          <div className="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>No</th> {/* Change the header for the row number column to "No" */}
-              {data.length > 0 &&
-                Object.keys(data[0]).map((column, index) => (
-                  <th key={index}>{column}</th>
-                ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                <td>{calculateRowNumber(rowIndex)}</td> {/* Display the row number */}
-                {Object.values(row).map((value, colIndex) => (
-                  <td key={colIndex}>{value}</td>
-                ))}
+        // Display the table only if data is available
+        isTableVisible && data.length > 0 ? (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>No</th> {/* Change the header for the row number column to "No" */}
+                {data.length > 0 &&
+                  Object.keys(data[0]).map((column, index) => (
+                    <th key={index}>{column}</th>
+                  ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  <td>{calculateRowNumber(rowIndex)}</td> {/* Display the row number */}
+                  {Object.values(row).map((value, colIndex) => (
+                    <td key={colIndex}>{value}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="info">Please Select The Query to See The Table</div>
+        )
       )}
       <div className="page-info">
         Page: {currentPage} / {totalPages} {/* Display current page and total pages */}
@@ -127,12 +144,14 @@ function App() {
       <div className="pagination">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
+          className={currentPage === 1 ? "pagination-button disabled" : "pagination-button"}
           disabled={currentPage === 1}
         >
           Prev
         </button>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
+          className={currentPage === totalPages ? "pagination-button disabled" : "pagination-button"}
           disabled={currentPage === totalPages}
         >
           Next

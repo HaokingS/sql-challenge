@@ -4,21 +4,26 @@
 table {
   border-collapse: collapse;
   width: 100%;
-  margin: 20px auto; /* Center the table horizontally */
+  margin: 20px auto;
+  /* Center the table horizontally */
   max-width: 800px;
-  border: 2px solid #000; /* Add a border to the table */
+  border: 2px solid #000;
+  /* Add a border to the table */
   text-align: center;
+  margin-bottom: 10px;
 }
 
 th,
 td {
-  border: 1px solid #000; /* Add borders to table cells */
+  border: 1px solid #000;
+  /* Add borders to table cells */
   padding: 8px;
 }
 
 /* Dropdown menu and input button styles */
 .query-container {
-  text-align: center; /* Center the container */
+  text-align: center;
+  /* Center the container */
   margin-top: 20px;
 }
 
@@ -33,37 +38,63 @@ td {
   margin-left: 10px;
 }
 
-h1, h3{
+h1,
+h3 {
   text-align: center;
 }
 
-.pagination, .total-rows {
+.page-info,
+.total-rows {
+  font-weight: bold;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
+  margin-bottom: 20px;
+}
+
+
+.info {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-weight: bold;
+  color: red;
+}
+
+/* Pagination controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 10px;
 }
 
-.page-info {
-  display: flex;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.pagination button {
+.pagination-button {
+  padding: 8px 12px;
+  font-size: 16px;
   margin: 0 5px;
   cursor: pointer;
-}
-
-.pagination button.active {
+  border: none;
   background-color: #007bff;
   color: #fff;
+}
+
+.pagination-button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  background-color: #0056b3;
 }
 
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px; /* Adjust the height as needed */
+  height: 100px;
+  /* Adjust the height as needed */
 }
 
 .loading {
@@ -71,8 +102,10 @@ h1, h3{
   /* Add your preferred loading animation here */
   /* For example, you can use a spinner or any other loading animation */
   /* Here's a simple spinner example: */
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #3498db; /* Blue */
+  border: 4px solid #f3f3f3;
+  /* Light grey */
+  border-top: 4px solid #3498db;
+  /* Blue */
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -81,6 +114,100 @@ h1, h3{
 }
 
 @keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Add the CSS for the loading spinner */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust the height as needed to center the spinner vertically */
+}
+
+.lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3b4aa9;
+  margin: -4px 0 0 -4px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes lds-roller {
   0% {
     transform: rotate(0deg);
   }
