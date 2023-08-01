@@ -109,7 +109,7 @@ function App() {
         </table>
       )}
       <div className="page-info">
-        {currentPage} / {totalPages} {/* Display current page and total pages */}
+        Page: {currentPage} / {totalPages} {/* Display current page and total pages */}
       </div>
       <div className="total-rows">
         Total Rows: {totalCount} {/* Display total count of data */}
