@@ -109,29 +109,32 @@ function App() {
       )}
       {/* Pagination controls */}
       <div className="pagination">
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Prev
+      </button>
+      <span>
+        {currentPage} / {totalPages} {/* Display current page and total pages */}
+      </span>
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          key={page}
+          onClick={() => handlePageChange(page)}
+          className={page === currentPage ? "active" : ""}
         >
-          Prev
+          {page}
         </button>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={page === currentPage ? "active" : ""}
-          >
-            {page}
-          </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      ))}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
     </div>
+  </div>
   );
 }
 
