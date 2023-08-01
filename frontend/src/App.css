@@ -32,14 +32,20 @@ td {
   margin-left: 10px;
 }
 
-h1, h2{
+h1, h3{
   text-align: center;
 }
 
-.pagination {
+.pagination, .total-rows {
   display: flex;
   justify-content: center;
   margin-top: 10px;
+}
+
+.page-info {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
 }
 
 .pagination button {
