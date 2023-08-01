@@ -5,15 +5,17 @@ import "./App.css"; // Import the CSS file
 function App() {
   const [data, setData] = useState([]);
   const [selectedQuery, setSelectedQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0); // Add state for total count
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
-  const fetchData = async () => {
+  const fetchData = () => {
     // Make sure a query option is selected before making the request
     if (!selectedQuery) {
       console.error("Please select a query from the dropdown.");
@@ -34,7 +36,9 @@ function App() {
       .then((response) => {
         // Handle the response from the backend here
         console.log(response.data);
-        setData(response.data); // Update the state with the fetched data
+        setData(response.data.data); // Update the state with the fetched data
+        setTotalCount(response.data.totalCount); // Update the total count
+        setTotalPages(Math.ceil(response.data.totalCount / itemsPerPage)); // Update the total pages
         setIsLoading(false); // Set isLoading to false after data is fetched
       })
       .catch((error) => {
@@ -57,8 +61,6 @@ function App() {
     setSelectedQuery(event.target.value);
   };
 
-  const totalPages = Math.ceil(data.totalCount / itemsPerPage);
-
   // Function to handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -67,8 +69,7 @@ function App() {
   return (
     <div>
       <h1>Data Management Internship</h1>
-      <h2>by Haoking Suryanatmaja</h2>
-      <br></br>
+      <h3>By Haoking Suryanatmaja</h3>
       <div className="query-container">
         <select onChange={handleSelectChange} value={selectedQuery}>
           {/* Dropdown options */}
@@ -107,34 +108,28 @@ function App() {
           </tbody>
         </table>
       )}
+      <div className="page-info">
+        {currentPage} / {totalPages} {/* Display current page and total pages */}
+      </div>
+      <div className="total-rows">
+        Total Rows: {totalCount} {/* Display total count of data */}
+      </div>
       {/* Pagination controls */}
       <div className="pagination">
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Prev
-      </button>
-      <span>
-        {currentPage} / {totalPages} {/* Display current page and total pages */}
-      </span>
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <button
-          key={page}
-          onClick={() => handlePageChange(page)}
-          className={page === currentPage ? "active" : ""}
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
-          {page}
+          Prev
         </button>
-      ))}
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </button>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
-  </div>
   );
 }
 

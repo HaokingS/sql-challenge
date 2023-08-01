@@ -57,12 +57,21 @@ def create_db_connection():
 def execute_query(query: str, offset: int = 0, limit: int = 50):
     connection, cursor = create_db_connection()
     try:
-        cursor.execute(query + f" OFFSET {offset} LIMIT {limit};")
+        total_count_query = f"SELECT COUNT(*) FROM ({query}) as count_table;"
+        cursor.execute(total_count_query)
+        total_count = cursor.fetchone()[0]
+        # Append the OFFSET and LIMIT to the original query.
+        query_with_pagination = query + f" OFFSET {offset} LIMIT {limit};"
+
+        cursor.execute(query_with_pagination)
         result = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         result_df = pd.DataFrame(result, columns=columns)
         response = result_df.to_dict(orient='records')
-        return response
+        return {
+            "data": response,
+            "totalCount": total_count
+        }
     except (Exception, psycopg2.Error) as error:
         print(f"Error executing query: {error}")
         return {"error": "Error executing query"}
