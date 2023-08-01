@@ -80,37 +80,25 @@ def execute_query(query: str, offset: int = 0, limit: int = 50):
 # def root():
 #     return {"Hello": "World"}
 
-@app.get('/q1')
-def endpoint_q1(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(first_query, offset=offset, limit=limit)
+queries = {
+    "q1": first_query,
+    "q2": second_query,
+    "q3": third_query,
+    "q4": fourth_query,
+    "q5": fifth_query,
+    "q6": sixth_query,
+    "q7": seventh_query,
+    "q8": eight_query,
+}
 
-@app.get('/q2')
-def endpoint_q2(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(second_query, offset=offset, limit=limit)
+def task_query(query_func):
+    def endpoint(offset: int = Query(0), limit: int = Query(10)):
+        return execute_query(query_func, offset=offset, limit=limit)
+    return endpoint
 
-@app.get('/q3')
-def endpoint_q3(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(third_query, offset=offset, limit=limit)
-
-@app.get('/q4')
-def endpoint_q4(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(fourth_query, offset=offset, limit=limit)
-
-@app.get('/q5')
-def endpoint_q5(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(fifth_query, offset=offset, limit=limit)
-
-@app.get('/q6')
-def endpoint_q6(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(sixth_query, offset=offset, limit=limit)
-
-@app.get('/q7')
-def endpoint_q7(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(seventh_query, offset=offset, limit=limit)
-
-@app.get('/q8')
-def endpoint_q8(offset: int = Query(0), limit: int = Query(10)):
-    return execute_query(eight_query, offset=offset, limit=limit)
+for path, query_func in queries.items():
+    endpoint_func = task_query(query_func)
+    app.get(f'/{path}')(endpoint_func)
 
 def get_total_rows_count(selected_query):
     connection, cursor = create_db_connection()
