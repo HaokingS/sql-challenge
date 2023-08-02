@@ -77,10 +77,10 @@ WHERE dept_name IN ('Sales', 'Development')
 # 8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name
 eight_query = """SELECT
     employees.last_name AS "Last Name",
-    count(DISTINCT employees.emp_no) as number_of_employee_shared_last_name
+    count(DISTINCT employees.emp_no) as "Number of Employee Shared Last Name"
 FROM employees
-GROUP BY employees.last_name
-ORDER BY number_of_employee_shared_last_name DESC
+GROUP BY 1
+ORDER BY 2 DESC
 """
 
 
