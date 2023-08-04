@@ -4,6 +4,8 @@ config.py
 __pycache__/
 venv/
 backend/.env
+EmployeeSQL/.env
+WebScrapping/.env
 
 /node_modules
 
