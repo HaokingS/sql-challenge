@@ -1,11 +1,8 @@
-# Ignore the config file
-config.py
-
 __pycache__/
 venv/
-backend/.env
+Backend/.env
 EmployeeSQL/.env
-WebScrapping/.env
+WebScraping/.env
 
 /node_modules
 
