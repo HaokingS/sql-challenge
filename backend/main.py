@@ -29,7 +29,7 @@ app.add_middleware(
 )
 
 load_dotenv()
-# variable environtment
+# variable environment
 POSTGRES_USER = os.environ.get("POSTGRES_USER")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
